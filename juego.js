@@ -28,7 +28,7 @@ function iniciarJuego(canvasElement, moveCountElement) {
     gMoveCountElem = moveCountElement;
     DrawingContext = gCanvasElement.getContext("2d");
     drawMatrix(matrix);
-    
+
 }
 function drawMatrix(matrix){
     for (var i=0; i< 4; i++){
@@ -47,13 +47,6 @@ function defColor(color){
     return white;
     
 }
-function inicioNegras(){
-	document.getElementById("moveBlancas").innerHTML = "<h3>Blancas</h3>"; 
-	document.getElementById("moveNegras").innerHTML = "<h3>Negras</h3>"; 
-	
-	document.getElementById("esTurno").innerHTML = "Inicio Negras toca Blancas:"; 
-}
-
 function Casilla(row, column, color) {
     this.row = row;
     this.column = column;
