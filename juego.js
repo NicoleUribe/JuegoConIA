@@ -1,86 +1,52 @@
-var kBoardWidth = 4;
-var kBoardHeight= 4;
-var kPieceWidth = 110;
-var kPieceHeight= 110;
-var kPixelWidth = 1 + (kBoardWidth * kPieceWidth);
-var gDrawingContext;
-
-var kPixelHeight= 1 + (kBoardHeight * kPieceHeight);
+var matrixX = 4;
+var matrixY= 4;
+var tokenX = 110;
+var tokenY= 110;
+var pixelX = 1 + (matrixX * tokenX);
+var DrawingContext;
+var piezas = [];
+var pixelY= 1 + (matrixY * tokenY);
 
 var gCanvasElement;
 
+var black= "#000000";
+var white= "#ffffff";
+var empty = "#ccc";
 var gMoveCountElem;
-
-var kNegras = "#000000";
-var kBlancas = "#ffffff";
-
+var color;
+//0=vacio
+//1=negro
+//2=blanco
+var matrix = [[["A1",1],["B1",0],["C1",0],["D1",2]],
+              [["A2",0],["B2",1],["C2",2],["D2",0]],
+              [["A3",0],["B3",2],["C3",1],["D3",0]],
+              [["A4",2],["B4",0],["C4",0],["D4",1]]];
 function iniciarJuego(canvasElement, moveCountElement) {
     gCanvasElement = canvasElement;
-    gCanvasElement.width = kPixelWidth;
-    gCanvasElement.height = kPixelHeight;
-   	//gCanvasElement.addEventListener("click", gestorClick, false);
+    gCanvasElement.width = pixelX;
+    gCanvasElement.height = pixelY;
     gMoveCountElem = moveCountElement;
-    gDrawingContext = gCanvasElement.getContext("2d");
-    newGame();
+    DrawingContext = gCanvasElement.getContext("2d");
+    drawMatrix(matrix);
+    
 }
-
-function newGame() {
-
-    // Reiniciamos variables. 
-    gNumMoves = 0;    
-    gNumPieces = 8;    
-    sonTablas = false; 
-    acuerdoTablas = false; 
-    turnoBlancas = true; 
-    turnoNegras = false; 
-    
-    piezas = []; // Vaciamos la lista de piezas, por si estamos pulsando el resetButton. 
-
-    // Añadimos las fichas negras en diagonal descendente de izquierda a derecha
-    /*for (var i = 0; i < kBoardHeight; i++) {
-        for (var j = 0; j < kBoardWidth; j++) {
-            if (i === j) {
-                piezas.push(new Casilla(i, j, kNegras));
-            }
-        }
-    }*/
-
-    
-    piezas.push(new Casilla(0, 0, kNegras));
-    piezas.push(new Casilla(1, 1, kNegras));
-    piezas.push(new Casilla(2, 2, kNegras));
-    piezas.push(new Casilla(3, 3, kNegras));
-    
-    piezas.push(new Casilla(3, 0, kBlancas));
-    piezas.push(new Casilla(2, 1, kBlancas));
-    piezas.push(new Casilla(1, 2, kBlancas));
-    piezas.push(new Casilla(0, 3, kBlancas));
-
-
-
-    // Añadimos las fichas blancas en diagonal ascendente de izquierda a derecha
-    /*for (var i = 3 - 1; i >= 0; i--) {
-        for (var j = 0; j < kBoardWidth; j++) {
-            if ((i + j) % 2 === 0) {
-                piezas.push(new Casilla(i, j, kBlancas));
-            }
-        }
-    }*/
-
-    gNumPieces = piezas.length;
+function drawMatrix(matrix){
+    for (var i=0; i< 4; i++){
+		for (var j=0;j< 4; j++) {
+            if(matrix[i][j][1]!=0)
+			piezas.push(new Casilla(i,j, defColor(matrix[i][j][1])));
+		}
+	}
     gSelectedPieceIndex = -1;
-    gSelectedPieceHasMoved = false;
-    gMoveCount = 0;
-    gGameInProgress = false; 
-    
-    turnoBlancas = true; 
-    turnoNegras = false;  
-    
-    drawBoard();
-    gGameInProgress = true;  
+	drawBoard();
 }
-
-
+function defColor(color){
+    if(color=='1')
+    return black;
+    if(color=='2')
+    return white;
+    
+}
 function inicioNegras(){
 	document.getElementById("moveBlancas").innerHTML = "<h3>Blancas</h3>"; 
 	document.getElementById("moveNegras").innerHTML = "<h3>Negras</h3>"; 
@@ -96,25 +62,25 @@ function Casilla(row, column, color) {
 
 function drawBoard() {
 
-    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
+    DrawingContext.clearRect(0, 0, pixelX, pixelY);
 
-    gDrawingContext.beginPath();
+    DrawingContext.beginPath();
    
     /* vertical lines */
-    for (var x = 0; x <= kPixelWidth; x += kPieceWidth) {
-		gDrawingContext.moveTo(0.5 + x, 0);
-		gDrawingContext.lineTo(0.5 + x, kPixelHeight);
+    for (var x = 0; x <= pixelX; x += tokenX) {
+		DrawingContext.moveTo(0.5 + x, 0);
+		DrawingContext.lineTo(0.5 + x, pixelY);
     }
     
     /* horizontal lines */
-    for (var y = 0; y <= kPixelHeight; y += kPieceHeight) {
-		gDrawingContext.moveTo(0, 0.5 + y);
-		gDrawingContext.lineTo(kPixelWidth, 0.5 +  y);
+    for (var y = 0; y <= pixelY; y += tokenY) {
+		DrawingContext.moveTo(0, 0.5 + y);
+		DrawingContext.lineTo(pixelX, 0.5 +  y);
     }
     
     /* draw it! */
-    gDrawingContext.strokeStyle = "#ccc";
-    gDrawingContext.stroke();
+    DrawingContext.strokeStyle = "#ccc";
+    DrawingContext.stroke();
     
     for (var i = 0; i < piezas.length; i++) {
 			drawPiece(piezas[i], piezas[i].color, i == gSelectedPieceIndex);
@@ -131,18 +97,18 @@ function drawBoard() {
 function drawPiece(p, color, selected) {
     var column = p.column;
     var row = p.row;
-    var x = (column * kPieceWidth) + (kPieceWidth/2);
-    var y = (row * kPieceHeight) + (kPieceHeight/2);
-    var radius = (kPieceWidth/2) - (kPieceWidth/10);
-    gDrawingContext.beginPath();
-    gDrawingContext.arc(x, y, radius, 0, Math.PI*2, false);
-    gDrawingContext.closePath();
-    gDrawingContext.fillStyle = color;
-    gDrawingContext.fill();
-    gDrawingContext.strokeStyle = "#000";
-    gDrawingContext.stroke();
+    var x = (column * tokenX) + (tokenX/2);
+    var y = (row * tokenY) + (tokenY/2);
+    var radius = (tokenX/2) - (tokenX/10);
+    DrawingContext.beginPath();
+    DrawingContext.arc(x, y, radius, 0, Math.PI*2, false);
+    DrawingContext.closePath();
+    DrawingContext.fillStyle = color;
+    DrawingContext.fill();
+    DrawingContext.strokeStyle = "#000";
+    DrawingContext.stroke();
     if (selected) {
-		gDrawingContext.fillStyle = "#ff0000";
-		gDrawingContext.fill();
+		DrawingContext.fillStyle = "#ff0000";
+		DrawingContext.fill();
     }
 }
