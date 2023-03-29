@@ -85,8 +85,6 @@ function drawBoard() {
 		endGame();
     } 
 }
-
-
 function drawPiece(p, color, selected) {
     var column = p.column;
     var row = p.row;
@@ -104,4 +102,14 @@ function drawPiece(p, color, selected) {
 		DrawingContext.fillStyle = "#ff0000";
 		DrawingContext.fill();
     }
+}
+function mover(x,y,dir){
+
+  if(dir=="n"){
+    if(matrix[x][1][1]){}
+  }
+
+}
+function crash(){
+
 }
