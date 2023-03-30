@@ -6,7 +6,8 @@ var pixelX = 1 + (matrixX * tokenX);
 var DrawingContext;
 var piezas = [];
 var pixelY= 1 + (matrixY * tokenY);
-
+var turnWhite = false;
+var turnBlack = true;
 var gCanvasElement;
 
 var selectedPiece = null;
@@ -72,7 +73,16 @@ function Casilla(row, column, color) {
     this.column = column;
     this.color = color;
 }
-
+function turn(){
+	if (turnBlack){
+		turnBlack=false; 
+		turnWhite=true; 
+	}
+	else {
+		turnBlack=true; 
+		turnWhite=false; 
+	}
+}
 function drawBoard() {
 
     DrawingContext.clearRect(0, 0, pixelX, pixelY);
@@ -124,7 +134,6 @@ function drawPiece(p, color, selected) {
     }
 }
 //MOVIMIENTO DE LA FICHA
-
 function handleMouseDown(e) {
     var rect = gCanvasElement.getBoundingClientRect();
     var x = e.clientX - rect.left;
@@ -153,7 +162,6 @@ function handleMouseMove(e) {
         drawBoard();
     }
 }
-
 function handleMouseUp(e) {
     if (selectedPiece !== null) {
         var rect = gCanvasElement.getBoundingClientRect();
@@ -186,17 +194,26 @@ function getPieceIndex(row, column) {
 
 
 function isValidMove(piece, newRow, newColumn) {
-    if (matrix[newRow][newColumn][1] != 0) {
+    if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
+        alert("No es tu turno"); 
+        return false;
+    }
+    if(matrix[piece.row][piece.column][1]==2 && turnBlack==true){
+        alert("No es tu turno"); 
+        return false;
+    }
+    if (matrix[newRow][newColumn][1] != 0 ){
         return false;
     }
     var rowDiff = Math.abs(piece.row - newRow);
     var colDiff = Math.abs(piece.column - newColumn);
-    if (rowDiff > 1 || colDiff > 1 ) {
+    if (rowDiff > 1 || colDiff > 1 ){
         return false;
     }
     return true;
 }
 function movePiece(piece, newRow, newColumn) {
+    turn();
     matrix[piece.row][piece.column][1] = 0;
     matrix[newRow][newColumn][1] = piece.color == black ? 1 : 2;
     piece.row = newRow;
