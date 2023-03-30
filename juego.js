@@ -26,10 +26,10 @@ var color;
 //0=vacio
 //1=negro
 //2=blanco
-var matrix = [[["A1",1],["B1",0],["C1",0],["D1",2]],
-              [["A2",0],["B2",1],["C2",2],["D2",0]],
-              [["A3",0],["B3",2],["C3",1],["D3",0]],
-              [["A4",2],["B4",0],["C4",0],["D4",1]]];
+var matrix = [[["A,1",1],["B,1",0],["C,1",0],["D,1",2]],
+              [["A,2",0],["B,2",1],["C,2",2],["D,2",0]],
+              [["A,3",0],["B,3",2],["C,3",1],["D,3",0]],
+              [["A,4",2],["B,4",0],["C,4",0],["D,4",1]]];
 
 
 var gSelectedPieceIndex = -1;
@@ -176,9 +176,9 @@ function handleMouseUp(e) {
 }
 function move(newRowIndex,newColumnIndex){
     if (isValidMove(selectedPiece, newRowIndex, newColumnIndex)) {
+        console.log("Moved piece from ("+matrix[selectedPiece.row][selectedPiece.column][0] +") to (" + matrix[newRowIndex][newColumnIndex][0] + ")");
         movePiece(selectedPiece, newRowIndex, newColumnIndex);
-         console.log("Moved piece from (" + selectedPiece.row + ", " + selectedPiece.column + ") to (" + newRowIndex + ", " + newColumnIndex + ")");
-         selectedPiece = null;
+          selectedPiece = null;
          gSelectedPieceIndex = -1;
          drawBoard();
      }
