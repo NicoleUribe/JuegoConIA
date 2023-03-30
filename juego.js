@@ -25,10 +25,10 @@ var color;
 //0=vacio
 //1=negro
 //2=blanco
-var matrix = [[["1A",1],["1B",0],["1C",0],["1D",2]],
-              [["2A",0],["2B",1],["2C",2],["2D",0]],
-              [["3A",0],["3B",2],["3C",1],["3D",0]],
-              [["4A",2],["4B",0],["4C",0],["4D",1]]];
+var matrix = [[["A1",1],["B1",0],["C1",0],["D1",2]],
+              [["A2",0],["B2",1],["C2",2],["D2",0]],
+              [["A3",0],["B3",2],["C3",1],["D3",0]],
+              [["A4",2],["B4",0],["C4",0],["D4",1]]];
 
 
 var gSelectedPieceIndex = -1;
@@ -129,10 +129,8 @@ function handleMouseDown(e) {
     var rect = gCanvasElement.getBoundingClientRect();
     var x = e.clientX - rect.left;
     var y = e.clientY - rect.top;
-
-    var columnIndex = Math.floor(x / tokenX);
-    var rowIndex = Math.floor(y / tokenY);
-    var pieceIndex = getPieceIndex(rowIndex, columnIndex);
+    var index=Index(x,y)
+    var pieceIndex = getPieceIndex(index[0],index[1] );
 
     if (pieceIndex != -1) {
         selectedPiece = piezas[pieceIndex];
@@ -140,7 +138,11 @@ function handleMouseDown(e) {
         drawBoard();
     }
 }
-
+function Index(x,y){
+    var columnIndex = Math.floor(x / tokenX);
+    var rowIndex = Math.floor(y / tokenY);
+    return [rowIndex,columnIndex];
+}
 function handleMouseMove(e) {
     if (gDragging) {
         var x = e.pageX - gCanvasElement.offsetLeft - gDraggingOffsetX;
@@ -160,7 +162,7 @@ function handleMouseUp(e) {
         var newColumnIndex = Math.floor(x / tokenX);
         var newRowIndex = Math.floor(y / tokenY);
         var newPieceIndex = getPieceIndex(newRowIndex, newColumnIndex);
-        jump(newRowIndex,newColumnIndex);
+        move(newRowIndex,newColumnIndex);
      
     }
 }
@@ -193,19 +195,6 @@ function isValidMove(piece, newRow, newColumn) {
         return false;
     }
     return true;
-}
-function jump(piece,newRow,newColumn){
-    while(matrix[newRow][newColumn][1] == 0){
-        //Arriba
-        if(piece.row+1==newRow){
-            //Norte
-            if(piece.column==newColumn){
-                move(newRow,newColumn);
-            }
-            newRow=piece.column+1;
-        }
-
-    }
 }
 function movePiece(piece, newRow, newColumn) {
     matrix[piece.row][piece.column][1] = 0;
