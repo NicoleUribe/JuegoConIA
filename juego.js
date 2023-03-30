@@ -216,7 +216,54 @@ function movePiece(piece, newRow, newColumn) {
     turn();
     matrix[piece.row][piece.column][1] = 0;
     matrix[newRow][newColumn][1] = piece.color == black ? 1 : 2;
+
+    // determine direction of movement
+    var rowDiff = newRow - piece.row;
+    var colDiff = newColumn - piece.column;
+    var direction = getDirection(piece.row,piece.column,newRow,newColumn);
+    /*if (rowDiff < 0) {
+        direction += "arriba";
+    } else if (rowDiff > 0) {
+        direction += "abajo";
+    }
+    if (colDiff < 0) {
+        direction += " izquierda";
+    } else if (colDiff > 0) {
+        direction += " derecha";
+    }
+    if (rowDiff != 0 && colDiff != 0 && Math.abs(rowDiff) == Math.abs(colDiff)) {
+        direction = "diagonal " + (rowDiff < 0 ? "arriba" : "abajo") + (colDiff < 0 ? " izquierda" : " derecha");
+    }*/
+
     piece.row = newRow;
     piece.column = newColumn;
+
+    console.log("La ficha se movió hacia " + direction);
 }
+
+function getDirection(currentRow, currentColumn, newRow, newColumn) {
+    var rowDiff = newRow - currentRow;
+    var colDiff = newColumn - currentColumn;
+    
+    if (rowDiff == -1 && colDiff == 0) {
+        return "arriba";
+    } else if (rowDiff == 1 && colDiff == 0) {
+        return "abajo";
+    } else if (rowDiff == 0 && colDiff == -1) {
+        return "izquierda";
+    } else if (rowDiff == 0 && colDiff == 1) {
+        return "derecha";
+    } else if (rowDiff == -1 && colDiff == 1) {
+        return "diagonal arriba derecha";
+    } else if (rowDiff == 1 && colDiff == 1) {
+        return "diagonal abajo derecha";
+    } else if (rowDiff == -1 && colDiff == -1) {
+        return "diagonal arriba izquierda";
+    } else if (rowDiff == 1 && colDiff == -1) {
+        return "diagonal abajo izquierda";
+    } else {
+        return "";
+    }
+}
+
 
