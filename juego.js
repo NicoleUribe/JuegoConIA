@@ -25,10 +25,10 @@ var color;
 //0=vacio
 //1=negro
 //2=blanco
-var matrix = [[["A1",1],["B1",0],["C1",0],["D1",2]],
-              [["A2",0],["B2",1],["C2",2],["D2",0]],
-              [["A3",0],["B3",2],["C3",1],["D3",0]],
-              [["A4",2],["B4",0],["C4",0],["D4",1]]];
+var matrix = [[["1A",1],["1B",0],["1C",0],["1D",2]],
+              [["2A",0],["2B",1],["2C",2],["2D",0]],
+              [["3A",0],["3B",2],["3C",1],["3D",0]],
+              [["4A",2],["4B",0],["4C",0],["4D",1]]];
 
 
 var gSelectedPieceIndex = -1;
@@ -160,15 +160,18 @@ function handleMouseUp(e) {
         var newColumnIndex = Math.floor(x / tokenX);
         var newRowIndex = Math.floor(y / tokenY);
         var newPieceIndex = getPieceIndex(newRowIndex, newColumnIndex);
-
-        if (isValidMove(selectedPiece, newRowIndex, newColumnIndex)) {
-            movePiece(selectedPiece, newRowIndex, newColumnIndex);
-            console.log("Moved piece from (" + selectedPiece.row + ", " + selectedPiece.column + ") to (" + newRowIndex + ", " + newColumnIndex + ")");
-            selectedPiece = null;
-            gSelectedPieceIndex = -1;
-            drawBoard();
-        }
+        jump(newRowIndex,newColumnIndex);
+     
     }
+}
+function move(newRowIndex,newColumnIndex){
+    if (isValidMove(selectedPiece, newRowIndex, newColumnIndex)) {
+        movePiece(selectedPiece, newRowIndex, newColumnIndex);
+         console.log("Moved piece from (" + selectedPiece.row + ", " + selectedPiece.column + ") to (" + newRowIndex + ", " + newColumnIndex + ")");
+         selectedPiece = null;
+         gSelectedPieceIndex = -1;
+         drawBoard();
+     }
 }
 function getPieceIndex(row, column) {
     for (var i = 0; i < piezas.length; i++) {
@@ -186,10 +189,23 @@ function isValidMove(piece, newRow, newColumn) {
     }
     var rowDiff = Math.abs(piece.row - newRow);
     var colDiff = Math.abs(piece.column - newColumn);
-    if (rowDiff > 1 || colDiff > 1 || rowDiff == colDiff) {
+    if (rowDiff > 1 || colDiff > 1 ) {
         return false;
     }
     return true;
+}
+function jump(piece,newRow,newColumn){
+    while(matrix[newRow][newColumn][1] == 0){
+        //Arriba
+        if(piece.row+1==newRow){
+            //Norte
+            if(piece.column==newColumn){
+                move(newRow,newColumn);
+            }
+            newRow=piece.column+1;
+        }
+
+    }
 }
 function movePiece(piece, newRow, newColumn) {
     matrix[piece.row][piece.column][1] = 0;
