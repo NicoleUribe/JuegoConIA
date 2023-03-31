@@ -275,27 +275,34 @@ function isValidMove(piece, newRow, newColumn) {
 }
 function winner(){
   var resultado;
-   if(checkCorners(1) || checkVertical(1)){
+   if(checkCorners(1) || checkVertical(1) || checkHorizontal(1)){
     alert("G A N O     N E G R O");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
       window.alert('el numero de movimientos fue '+gMoveCount);
-      window.location.reload()
+      window.location.reload();
     }
     else
       window.location.reload();
    }
-   if(checkCorners(2) || checkVertical(2)){
+   if(checkCorners(2) || checkVertical(2) || checkHorizontal(2)){
     alert("G A N O     B L A N C O ");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
       window.alert('el numero de movimientos fue '+gMoveCount);
-      window.location.reload()
+      window.location.reload();
     }
     else
       window.location.reload();
    }
 
+}
+function checkHorizontal(color){
+  for(var i=0; i<4;i++){
+    if(matrix[i][0][1]==color && matrix[i][1][1]==color && matrix[i][2][1]==color && matrix[i][3][1]==color)
+    return true;
+  }  
+  return false;
 }
 function checkVertical(color){
   for(var i=0; i<4;i++){
