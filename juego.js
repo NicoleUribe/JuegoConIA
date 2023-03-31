@@ -80,11 +80,12 @@ function turn(){
 	if (turnBlack){
 		turnBlack=false; 
 		turnWhite=true; 
-       
+        document.getElementById("esTurno").innerHTML = "Blancas mueven:"; 
 	}
 	else {
 		turnBlack=true; 
 		turnWhite=false; 
+        document.getElementById("esTurno").innerHTML = "Negras mueven:"; 
 	}
 }
 function drawBoard() {
@@ -189,8 +190,8 @@ function handleMouseUp(e) {
         var newRowIndex = Math.floor(y / tokenY);
         var newPieceIndex = getPieceIndex(newRowIndex, newColumnIndex);
         move(newRowIndex,newColumnIndex);
-     
     }
+    winner();
 }
 function move(newRowIndex,newColumnIndex){
     if (isValidMove(selectedPiece, newRowIndex, newColumnIndex)) {
@@ -213,9 +214,6 @@ function getPieceIndex(row, column) {
     }
     return -1;
 }
-
-
-
 function isValidMove(piece, newRow, newColumn) {
     if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
         alert("No es tu turno"); 
@@ -275,6 +273,35 @@ function isValidMove(piece, newRow, newColumn) {
     console.log("Movimiento valido")
     return true;
 }
+function winner(){
+  var resultado;
+   if(checkCorners(1) ){
+    alert("G A N O     N E G R O");
+    resultado=window.confirm('quiere ver los resultados?');
+    if(resultado===true){
+      window.alert('el numero de movimientos fue '+gMoveCount);
+      window.location.reload()
+    }
+    else
+      window.location.reload();
+   }
+   if(checkCorners(2) ){
+    alert("G A N O     B L A N C O ");
+    resultado=window.confirm('quiere ver los resultados?');
+    if(resultado===true){
+      window.alert('el numero de movimientos fue '+gMoveCount);
+      window.location.reload()
+    }
+    else
+      window.location.reload();
+   }
+
+}
+function checkCorners(color){
+  if(matrix[0][0][1]==color && matrix[0][3][1]==color && matrix[3][0][1]==color && matrix[3][3][1]==color)
+   return true;
+  return false;
+}
 
 function movePiece(piece, newRow, newColumn) {
     turn();
@@ -290,7 +317,7 @@ function movePiece(piece, newRow, newColumn) {
     piece.row = newRow;
     piece.column = newColumn;
 
-    console.log("La ficha se movió hacia " + direction);
+   // console.log("La ficha se movió hacia " + direction);
 }
 
 
