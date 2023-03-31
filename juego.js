@@ -80,6 +80,7 @@ function turn(){
 	if (turnBlack){
 		turnBlack=false; 
 		turnWhite=true; 
+       
 	}
 	else {
 		turnBlack=true; 
@@ -199,6 +200,9 @@ function move(newRowIndex,newColumnIndex){
           selectedPiece = null;
          gSelectedPieceIndex = -1;
          drawBoard();
+         gMoveCount++;
+         gMoveCountElem.innerHTML = gMoveCount;
+         localStorage.setItem("numMove", gMoveCount);
      }
 }
 function getPieceIndex(row, column) {
@@ -276,8 +280,6 @@ function isValidMove(piece, newRow, newColumn) {
     console.log("Movimiento valido")
     return true;
 }
-
-
 
 function movePiece(piece, newRow, newColumn) {
     turn();
@@ -379,8 +381,6 @@ function getRightPosition(pieceIndex) {
     }
     return [selectedRow, rightColumn];
   }
-  
-
   //Diagonales
 
   function getDiagonalTopRightPosition(pieceIndex) {
