@@ -156,10 +156,9 @@ function handleMouseDown(e) {
       var topPosition = getTopPosition(gSelectedPieceIndex);
       console.log("Arriba position: ", topPosition);
       var bottomPosition = getBottomPosition(gSelectedPieceIndex);
-      console.log("Abajo position: ", bottomPosition);*/
-
-      var upperRightPosition = getDiagonalTopRightPosition(gSelectedPieceIndex);
-      console.log("Arriba a la derecha position: ", upperRightPosition);
+      console.log("Abajo position: ", bottomPosition);
+      var upperRightPosition = getDiagonalBottomRightPosition(gSelectedPieceIndex);
+      console.log("Arriba a la izquierda position: ", upperRightPosition);*/
     }
   }
   
@@ -215,30 +214,7 @@ function getPieceIndex(row, column) {
     return -1;
 }
 
-/*
-function isValidMove(piece, newRow, newColumn) {
-    var rightPosition = getRightPosition(getPieceIndex(piece.row, piece.column));
-    console.log("Derecha position: ", rightPosition)
-    if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
-        alert("No es tu turno"); 
-        return false;
-    }
-    if(matrix[piece.row][piece.column][1]==2 && turnBlack==true){
-        alert("No es tu turno"); 
-        return false;
-    }
-    if (matrix[newRow][newColumn][1] != 0 ){
-        return false;
-    }
-    var rowDiff = Math.abs(piece.row - newRow);
-    var colDiff = Math.abs(piece.column - newColumn);
-    if (rowDiff > 1 || colDiff > 1 ){
-        console.log("Movimiento invalido")
-        return false;
-    }
-    console.log("Movimiento valido")
-    return true;
-}*/
+
 
 function isValidMove(piece, newRow, newColumn) {
     if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
@@ -257,6 +233,12 @@ function isValidMove(piece, newRow, newColumn) {
     var bottom = getBottomPosition(getPieceIndex(piece.row, piece.column));
     var right = getRightPosition(getPieceIndex(piece.row, piece.column));
     var left = getLeftPosition(getPieceIndex(piece.row, piece.column));
+    var topRight = getDiagonalTopRightPosition(getPieceIndex(piece.row, piece.column));
+    var topLeft = getDiagonalTopLeftPosition(getPieceIndex(piece.row, piece.column));
+    var bottomLeft = getDiagonalBottomLeftPosition(getPieceIndex(piece.row, piece.column));
+    var bottomRight = getDiagonalBottomRightPosition(getPieceIndex(piece.row, piece.column));
+
+
     if (right[0] >= 0 && right[1] < matrixX) {
         validMoves.push(right);
     }
@@ -269,12 +251,25 @@ function isValidMove(piece, newRow, newColumn) {
     if (bottom[0] < matrixY) {
         validMoves.push(bottom);
     }
+    if (topRight[0] >= 0 && topRight[1] < matrixX) {
+        validMoves.push(topRight);
+    }
+    if (topLeft[0] >= 0 && topLeft[1] >= 0) {
+        validMoves.push(topLeft);
+    }
+    if (bottomLeft[0] < matrixY && bottomLeft[1] >= 0) {
+        validMoves.push(bottomLeft);
+    }
+    if (bottomRight[0] < matrixY && bottomRight[1] < matrixX) {
+        validMoves.push(bottomRight);
+    }
+
     if (newRow === piece.row && newColumn === piece.column) {
-        console.log("Movimiento invalido")
+        alert("Movimiento invalido")
         return false;
     }
     if (!validMoves.some(move => move[0] === newRow && move[1] === newColumn)) {
-        console.log("Movimiento invalido")
+        alert("Movimiento invalido")
         return false;
     }
     console.log("Movimiento valido")
@@ -382,24 +377,87 @@ function getRightPosition(pieceIndex) {
     return [selectedRow, rightColumn];
   }
   //Diagonales
-
+  
   function getDiagonalTopRightPosition(pieceIndex) {
     var selectedRow = piezas[pieceIndex].row;
     var selectedColumn = piezas[pieceIndex].column;
     var topRow = 0;
     var rightColumn = matrixX - 1;
+    var lastRow = selectedRow;
+    var lastColumn = selectedColumn;
   
-    for (var row = selectedRow - 1, column = selectedColumn + 1; 
-         row >= topRow && column <= rightColumn; 
-         row--, column++) {
+    for (var row = selectedRow - 1, column = selectedColumn + 1; row >= topRow && column <= rightColumn; row--, column++) {
       if (matrix[row][column][1] == 0) {
-        continue;
+        lastRow = row;
+        lastColumn = column;
       } else {
-        return [row, column];
+        break;
       }
     }
-    return [selectedRow, selectedColumn];
+    
+    return [lastRow, lastColumn];
   }
+  
+  function getDiagonalTopLeftPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var topRow = 0;
+    var leftColumn = 0;
+    var lastRow = selectedRow;
+    var lastColumn = selectedColumn;
+  
+    for (var row = selectedRow - 1, column = selectedColumn - 1; row >= topRow && column >= leftColumn; row--, column--) {
+      if (matrix[row][column][1] == 0) {
+        lastRow = row;
+        lastColumn = column;
+      } else {
+        break;
+      }
+    }
+    
+    return [lastRow, lastColumn];
+  }
+  
+  function getDiagonalBottomLeftPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var bottomRow = matrixY - 1;
+    var leftColumn = 0;
+    var lastRow = selectedRow;
+    var lastColumn = selectedColumn;
+  
+    for (var row = selectedRow + 1, column = selectedColumn - 1; row <= bottomRow && column >= leftColumn; row++, column--) {
+      if (matrix[row][column][1] == 0) {
+        lastRow = row;
+        lastColumn = column;
+      } else {
+        break;
+      }
+    }
+  
+    return [lastRow, lastColumn];
+  }
+  
+  function getDiagonalBottomRightPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var bottomRow = matrixY - 1;
+    var rightColumn = matrixX - 1;
+    var lastRow = selectedRow;
+    var lastColumn = selectedColumn;
+  
+    for (var row = selectedRow + 1, column = selectedColumn + 1; row <= bottomRow && column <= rightColumn; row++, column++) {
+      if (matrix[row][column][1] == 0) {
+        lastRow = row;
+        lastColumn = column;
+      } else {
+        break;
+      }
+    }
+  
+    return [lastRow, lastColumn];
+  }
+  
   
   
 
