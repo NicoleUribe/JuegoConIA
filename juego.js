@@ -275,7 +275,7 @@ function isValidMove(piece, newRow, newColumn) {
 }
 function winner(){
   var resultado;
-   if(checkCorners(1) ){
+   if(checkCorners(1) || checkVertical(1)){
     alert("G A N O     N E G R O");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
@@ -285,7 +285,7 @@ function winner(){
     else
       window.location.reload();
    }
-   if(checkCorners(2) ){
+   if(checkCorners(2) || checkVertical(2)){
     alert("G A N O     B L A N C O ");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
@@ -296,6 +296,13 @@ function winner(){
       window.location.reload();
    }
 
+}
+function checkVertical(color){
+  for(var i=0; i<4;i++){
+    if(matrix[0][i][1]==color && matrix[1][i][1]==color && matrix[2][i][1]==color && matrix[3][i][1]==color)
+    return true;
+  }  
+  return false;
 }
 function checkCorners(color){
   if(matrix[0][0][1]==color && matrix[0][3][1]==color && matrix[3][0][1]==color && matrix[3][3][1]==color)
