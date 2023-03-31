@@ -38,6 +38,9 @@ var gCursorColumn;
 var gGameInProgress = true;
 var gMoveCount = 0;
 
+
+  
+
 function iniciarJuego(canvasElement, moveCountElement) {
     gCanvasElement = canvasElement;
     gCanvasElement.width = pixelX;
@@ -138,21 +141,35 @@ function handleMouseDown(e) {
     var rect = gCanvasElement.getBoundingClientRect();
     var x = e.clientX - rect.left;
     var y = e.clientY - rect.top;
-    var index=Index(x,y)
-    var pieceIndex = getPieceIndex(index[0],index[1] );
-
+    var index = Index(x, y);
+    var pieceIndex = getPieceIndex(index[0], index[1]);
+  
     if (pieceIndex != -1) {
-        selectedPiece = piezas[pieceIndex];
-        gSelectedPieceIndex = pieceIndex;
-        drawBoard();
+      selectedPiece = piezas[pieceIndex];
+      gSelectedPieceIndex = pieceIndex;
+      drawBoard();
+      /*var rightPosition = getRightPosition(gSelectedPieceIndex);
+      console.log("Derecha position: ", rightPosition)
+      var leftPosition = getLeftPosition(gSelectedPieceIndex);
+      console.log("Izquierda position: ", leftPosition);
+      var topPosition = getTopPosition(gSelectedPieceIndex);
+      console.log("Arriba position: ", topPosition);
+      var bottomPosition = getBottomPosition(gSelectedPieceIndex);
+      console.log("Abajo position: ", bottomPosition);*/
+
+      var upperRightPosition = getDiagonalTopRightPosition(gSelectedPieceIndex);
+      console.log("Arriba a la derecha position: ", upperRightPosition);
     }
-}
+  }
+  
 function Index(x,y){
+    console.log("Index se utilizo")
     var columnIndex = Math.floor(x / tokenX);
     var rowIndex = Math.floor(y / tokenY);
     return [rowIndex,columnIndex];
 }
 function handleMouseMove(e) {
+    console.log("handleMouseMove se utilizo")
     if (gDragging) {
         var x = e.pageX - gCanvasElement.offsetLeft - gDraggingOffsetX;
         var y = e.pageY - gCanvasElement.offsetTop - gDraggingOffsetY;
@@ -163,6 +180,7 @@ function handleMouseMove(e) {
     }
 }
 function handleMouseUp(e) {
+    console.log("handleMouseUp se utilizo")
     if (selectedPiece !== null) {
         var rect = gCanvasElement.getBoundingClientRect();
         var x = e.clientX - rect.left;
@@ -184,6 +202,7 @@ function move(newRowIndex,newColumnIndex){
      }
 }
 function getPieceIndex(row, column) {
+    console.log("getPieceIndex se utilizo")
     for (var i = 0; i < piezas.length; i++) {
         if (piezas[i].row === row && piezas[i].column === column) {
             return i;
@@ -192,8 +211,10 @@ function getPieceIndex(row, column) {
     return -1;
 }
 
-
+/*
 function isValidMove(piece, newRow, newColumn) {
+    var rightPosition = getRightPosition(getPieceIndex(piece.row, piece.column));
+    console.log("Derecha position: ", rightPosition)
     if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
         alert("No es tu turno"); 
         return false;
@@ -208,38 +229,73 @@ function isValidMove(piece, newRow, newColumn) {
     var rowDiff = Math.abs(piece.row - newRow);
     var colDiff = Math.abs(piece.column - newColumn);
     if (rowDiff > 1 || colDiff > 1 ){
+        console.log("Movimiento invalido")
         return false;
     }
+    console.log("Movimiento valido")
+    return true;
+}*/
+
+function isValidMove(piece, newRow, newColumn) {
+    if(matrix[piece.row][piece.column][1]==1 && turnWhite ==true){
+        alert("No es tu turno"); 
+        return false;
+    }
+    if(matrix[piece.row][piece.column][1]==2 && turnBlack==true){
+        alert("No es tu turno"); 
+        return false;
+    }
+    if (matrix[newRow][newColumn][1] != 0 ){
+        return false;
+    }
+    var validMoves = [];
+    var top = getTopPosition(getPieceIndex(piece.row, piece.column));
+    var bottom = getBottomPosition(getPieceIndex(piece.row, piece.column));
+    var right = getRightPosition(getPieceIndex(piece.row, piece.column));
+    var left = getLeftPosition(getPieceIndex(piece.row, piece.column));
+    if (right[0] >= 0 && right[1] < matrixX) {
+        validMoves.push(right);
+    }
+    if (left[0] >= 0 && left[1] >= 0) {
+        validMoves.push(left);
+    }
+    if (top[0] >= 0) {
+        validMoves.push(top);
+    }
+    if (bottom[0] < matrixY) {
+        validMoves.push(bottom);
+    }
+    if (newRow === piece.row && newColumn === piece.column) {
+        console.log("Movimiento invalido")
+        return false;
+    }
+    if (!validMoves.some(move => move[0] === newRow && move[1] === newColumn)) {
+        console.log("Movimiento invalido")
+        return false;
+    }
+    console.log("Movimiento valido")
     return true;
 }
+
+
+
 function movePiece(piece, newRow, newColumn) {
     turn();
     matrix[piece.row][piece.column][1] = 0;
     matrix[newRow][newColumn][1] = piece.color == black ? 1 : 2;
 
     // determine direction of movement
-    var rowDiff = newRow - piece.row;
-    var colDiff = newColumn - piece.column;
+    //var rowDiff = newRow - piece.row;
+    //var colDiff = newColumn - piece.column;
     var direction = getDirection(piece.row,piece.column,newRow,newColumn);
-    /*if (rowDiff < 0) {
-        direction += "arriba";
-    } else if (rowDiff > 0) {
-        direction += "abajo";
-    }
-    if (colDiff < 0) {
-        direction += " izquierda";
-    } else if (colDiff > 0) {
-        direction += " derecha";
-    }
-    if (rowDiff != 0 && colDiff != 0 && Math.abs(rowDiff) == Math.abs(colDiff)) {
-        direction = "diagonal " + (rowDiff < 0 ? "arriba" : "abajo") + (colDiff < 0 ? " izquierda" : " derecha");
-    }*/
+
 
     piece.row = newRow;
     piece.column = newColumn;
 
     console.log("La ficha se movió hacia " + direction);
 }
+
 
 function getDirection(currentRow, currentColumn, newRow, newColumn) {
     var rowDiff = newRow - currentRow;
@@ -266,4 +322,86 @@ function getDirection(currentRow, currentColumn, newRow, newColumn) {
     }
 }
 
+//obtener las posiciones disponibles
+// arriba abajo izquierda derecha
+function getBottomPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var bottomRow = matrixY - 1;
+    for (var row = selectedRow + 1; row <= bottomRow; row++) {
+      if (matrix[row][selectedColumn][1] == 0) {
+        continue;
+      } else {
+        return [row - 1, selectedColumn];
+      }
+    }
+    return [bottomRow, selectedColumn];
+  }
 
+  function getTopPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var topRow = 0;
+    for (var row = selectedRow - 1; row >= topRow; row--) {
+        if (matrix[row][selectedColumn][1] == 0) {
+            continue;
+        } else {
+            return [row + 1, selectedColumn];
+        }
+    }
+    return [topRow, selectedColumn];
+}
+
+function getLeftPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var leftColumn = 0;
+    for (var column = selectedColumn - 1; column >= leftColumn; column--) {
+      if (matrix[selectedRow][column][1] == 0) {
+        continue;
+      } else {
+        return [selectedRow, column + 1];
+      }
+    }
+    return [selectedRow, leftColumn];
+}
+
+function getRightPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var rightColumn = matrixX - 1;
+    for (var col = selectedColumn + 1; col <= rightColumn; col++) {
+      if (matrix[selectedRow][col][1] == 0) {
+        continue;
+      } else {
+        return [selectedRow, col - 1];
+      }
+    }
+    return [selectedRow, rightColumn];
+  }
+  
+
+  //Diagonales
+
+  function getDiagonalTopRightPosition(pieceIndex) {
+    var selectedRow = piezas[pieceIndex].row;
+    var selectedColumn = piezas[pieceIndex].column;
+    var topRow = 0;
+    var rightColumn = matrixX - 1;
+  
+    for (var row = selectedRow - 1, column = selectedColumn + 1; 
+         row >= topRow && column <= rightColumn; 
+         row--, column++) {
+      if (matrix[row][column][1] == 0) {
+        continue;
+      } else {
+        return [row, column];
+      }
+    }
+    return [selectedRow, selectedColumn];
+  }
+  
+  
+
+  
+  
