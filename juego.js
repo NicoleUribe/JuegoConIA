@@ -9,9 +9,9 @@ var pixelY= 1 + (matrixY * tokenY);
 var turnWhite = false;
 var turnBlack = true;
 var gCanvasElement;
-var count=1;
+
 var selectedPiece = null;
-var CPUturn=blanco;
+
 var gSelectedPieceIndex;
 var gSelectedPieceHasMoved;
 var gDragging;
@@ -347,7 +347,7 @@ function movePiece(piece, newRow, newColumn) {
     piece.row = newRow;
     piece.column = newColumn;
 
-   //console.log("La ficha se movió hacia " + direction);
+   console.log("La ficha se movió hacia " + direction);
 }
 
 
@@ -514,19 +514,7 @@ function getRightPosition(pieceIndex) {
   
     return [lastRow, lastColumn];
   }
-  function evaluate(){
-    for(var i=0; i<4; i++){
-      for(var j=0;i<4;i++){
-        if(matrix[i][j][1]==2){
-          
-        }
-      }
-    }
-  }
-  function IAPlayer(){
   
-  }
-
   
   
 
