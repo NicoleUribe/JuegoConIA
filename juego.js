@@ -164,7 +164,6 @@ function handleMouseDown(e) {
   }
   
 function Index(x,y){
-    console.log("Index se utilizo")
     var columnIndex = Math.floor(x / tokenX);
     var rowIndex = Math.floor(y / tokenY);
     return [rowIndex,columnIndex];
@@ -181,7 +180,6 @@ function handleMouseMove(e) {
     }
 }
 function handleMouseUp(e) {
-    console.log("handleMouseUp se utilizo")
     if (selectedPiece !== null) {
         var rect = gCanvasElement.getBoundingClientRect();
         var x = e.clientX - rect.left;
@@ -190,8 +188,9 @@ function handleMouseUp(e) {
         var newRowIndex = Math.floor(y / tokenY);
         var newPieceIndex = getPieceIndex(newRowIndex, newColumnIndex);
         move(newRowIndex,newColumnIndex);
+        winner();
+
     }
-    winner();
 }
 function move(newRowIndex,newColumnIndex){
     if (isValidMove(selectedPiece, newRowIndex, newColumnIndex)) {
@@ -206,7 +205,6 @@ function move(newRowIndex,newColumnIndex){
      }
 }
 function getPieceIndex(row, column) {
-    console.log("getPieceIndex se utilizo")
     for (var i = 0; i < piezas.length; i++) {
         if (piezas[i].row === row && piezas[i].column === column) {
             return i;
@@ -273,6 +271,7 @@ function isValidMove(piece, newRow, newColumn) {
     console.log("Movimiento valido")
     return true;
 }
+
 function winner(){
   var resultado;
    if(checkCorners(1) || checkVertical(1) || checkHorizontal(1)){
@@ -296,6 +295,18 @@ function winner(){
       window.location.reload();
    }
 
+   if (checkSquare(1) || checkSquare(2)) {
+    alert("Ganó un jugador formando un cuadrado de fichas del mismo color.");
+    resultado=window.confirm('¿Quiere ver los resultados?');
+    if(resultado===true){
+      window.alert('El número de movimientos fue '+gMoveCount);
+      window.location.reload();
+    } else {
+      window.location.reload();
+    }
+  }
+  
+
 }
 function checkHorizontal(color){
   for(var i=0; i<4;i++){
@@ -316,6 +327,19 @@ function checkCorners(color){
    return true;
   return false;
 }
+
+function checkSquare(color) {
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+      if (matrix[i][j][1] == color && i + 1 < 4 && j + 1 < 4 && matrix[i+1][j][1] == color && matrix[i][j+1][1] == color && matrix[i+1][j+1][1] == color) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
 
 function movePiece(piece, newRow, newColumn) {
     turn();
