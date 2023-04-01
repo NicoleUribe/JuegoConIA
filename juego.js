@@ -295,18 +295,6 @@ function winner(){
       window.location.reload();
    }
 
-   if (checkSquare(1) || checkSquare(2)) {
-    alert("Ganó un jugador formando un cuadrado de fichas del mismo color.");
-    resultado=window.confirm('¿Quiere ver los resultados?');
-    if(resultado===true){
-      window.alert('El número de movimientos fue '+gMoveCount);
-      window.location.reload();
-    } else {
-      window.location.reload();
-    }
-  }
-  
-
 }
 function checkSquare(color){
   for(var i=0;i<4;i++){
