@@ -275,7 +275,7 @@ function isValidMove(piece, newRow, newColumn) {
 }
 function winner(){
   var resultado;
-   if(checkCorners(1) || checkVertical(1) || checkHorizontal(1)){
+   if(checkCorners(1) || checkVertical(1) || checkHorizontal(1) || checkSquare(1)){
     alert("G A N O     N E G R O");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
@@ -285,7 +285,7 @@ function winner(){
     else
       window.location.reload();
    }
-   if(checkCorners(2) || checkVertical(2) || checkHorizontal(2)){
+   if(checkCorners(2) || checkVertical(2) || checkHorizontal(2) || checkSquare(2)){
     alert("G A N O     B L A N C O ");
     resultado=window.confirm('quiere ver los resultados?');
     if(resultado===true){
@@ -296,6 +296,15 @@ function winner(){
       window.location.reload();
    }
 
+}
+function checkSquare(color){
+  for(var i=0;i<4;i++){
+    for(var j=0;j<4;j++){
+      if(matrix[i][j][1]==color && matrix[i+1][j][1]==color && matrix[i][j+1][1]==color && matrix[i+1][j+1][1]==color)
+      return true;
+    }
+  }
+  return false;
 }
 function checkHorizontal(color){
   for(var i=0; i<4;i++){
@@ -331,7 +340,7 @@ function movePiece(piece, newRow, newColumn) {
     piece.row = newRow;
     piece.column = newColumn;
 
-   // console.log("La ficha se movió hacia " + direction);
+   console.log("La ficha se movió hacia " + direction);
 }
 
 
