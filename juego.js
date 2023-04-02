@@ -53,7 +53,7 @@ function drawMatrix(matrix){
     for (var i=0; i< 4; i++){
 		for (var j=0;j< 4; j++) {
             if(matrix[i][j][1]!=0)
-			piezas.push(new Casilla(i,j, defColor(matrix[i][j][1])));
+			piezas.push(new casilla(i,j, defColor(matrix[i][j][1])));
 		}
 	}
     gSelectedPieceIndex = -1;
@@ -66,7 +66,7 @@ function defColor(color){
     return white;
     
 }
-function Casilla(row, column, color) {
+function casilla(row, column, color) {
     this.row = row;
     this.column = column;
     this.color = color;
@@ -157,7 +157,6 @@ function handleMouseDown(e) {
       console.log("Arriba a la izquierda position: ", upperRightPosition);*/
     }
   }
-  
 function Index(x,y){
     var columnIndex = Math.floor(x / tokenX);
     var rowIndex = Math.floor(y / tokenY);
@@ -514,9 +513,3 @@ function getRightPosition(pieceIndex) {
   
     return [lastRow, lastColumn];
   }
-  
-  
-  
-
-  
-  
