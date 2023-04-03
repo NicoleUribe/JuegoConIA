@@ -1,6 +1,6 @@
-#Welcome to Cuatela whit IA
+# Welcome to Cuatela whit IA
 
-#Team
+### Team
 
 - Franklin Ruben Rosembluth Prado
 - Luis Sebastian Salazar Villegas
