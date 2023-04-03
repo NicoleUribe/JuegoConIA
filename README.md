@@ -41,4 +41,9 @@ Comparing whether it starts with min or starts with max, there is a slight tende
 We determined that min_max_cutoff with alpha-beta pruning expands all possible states until max_depth is reached, and this has variations when using different heuristics according with the cut or the action used.
 Getting all the possible actions for a state increases the time, this is why even though not so many states are expanded, time is really high.
 
-###End
+## Conclusions
+
+- We have observed that the heuristic is very important to determine which action or position we can choose to have better stadistics
+- We observed that the highest score strategy is more consistent in terms of the average time the computer takes to respond.
+- We observed that using comparition between heuristics is better when it has a different purpose of action
+- The time takes up increasing to respond when max depth is incresing too, but at the end it returns a very low average response using min_max_cutoof or with alpha beta pruning.
